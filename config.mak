@@ -63,18 +63,6 @@ CFLAGS				= -DNX_RELEASE -Os
 Q					= @
 endif
 
-###########################################################################
-# MISC tools for MS-DOS
-###########################################################################
-ifeq ($(OS),Windows_NT)
-MKDIR				= mkdir
-RM					= del /q /F
-MV					= move
-CD					= cd
-CP					= copy
-ECHO				= echo
-RMDIR				= rmdir /S /Q
-else
 MKDIR				= mkdir
 RM					= rm -f
 MV					= mv
@@ -82,7 +70,7 @@ CD					= cd
 CP					= cp
 ECHO				= echo
 RMDIR				= rm -rf
-endif
+
 ###########################################################################
 # FLAGS
 ###########################################################################

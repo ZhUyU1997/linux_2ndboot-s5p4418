@@ -73,47 +73,25 @@ $(DIR_OBJOUTPUT)/%.o: src/%.S
 	$(Q)$(CC) -MMD $< -c -o $@ $(ASFLAG) $(CFLAGS) $(SYS_INCLUDES)
 ###################################################################################################
 
-
-all: mkobjdir $(SYS_OBJS_LIST) link bin
-
-mkobjdir:
-ifeq ($(OS),Windows_NT)
-	@if not exist $(DIR_OBJOUTPUT)			\
-		@$(MKDIR) $(DIR_OBJOUTPUT)
-	@if not exist $(DIR_TARGETOUTPUT)		\
-		@$(MKDIR) $(DIR_TARGETOUTPUT)
-else
-	@if	[ ! -e $(DIR_OBJOUTPUT) ]; then 	\
-		$(MKDIR) $(DIR_OBJOUTPUT);		\
-	fi;
-	@if	[ ! -e $(DIR_TARGETOUTPUT) ]; then 	\
-		$(MKDIR) $(DIR_TARGETOUTPUT);		\
-	fi;
+ifeq ($(wildcard $(DIR_OBJOUTPUT)),)
+__dummy := $(shell $(MKDIR) $(DIR_OBJOUTPUT))
+endif
+ifeq ($(wildcard $(DIR_TARGETOUTPUT)),)
+__dummy := $(shell $(MKDIR) $(DIR_TARGETOUTPUT))
 endif
 
-link:
+all: link
+
+link: $(SYS_OBJS_LIST)
 	@echo [link.... $(DIR_TARGETOUTPUT)/$(TARGET_NAME).elf]
 	$(Q)$(CC) $(SYS_OBJS_LIST) $(LDFLAGS) -o $(DIR_TARGETOUTPUT)/$(TARGET_NAME).elf
-
-bin:
 	@echo [binary.... $(DIR_TARGETOUTPUT)/$(TARGET_NAME).bin]
 	$(Q)$(MAKEBIN) -O binary $(DIR_TARGETOUTPUT)/$(TARGET_NAME).elf $(DIR_TARGETOUTPUT)/$(TARGET_NAME).bin
 
 ###################################################################################################
 clean:
-ifeq ($(OS),Windows_NT)
-	@if exist $(DIR_OBJOUTPUT)			\
-		@$(RMDIR) $(DIR_OBJOUTPUT)
-	@if exist $(DIR_TARGETOUTPUT)			\
-		@$(RMDIR) $(DIR_TARGETOUTPUT)
-else
-	@if	[ -e $(DIR_OBJOUTPUT) ]; then 		\
-		$(RMDIR) $(DIR_OBJOUTPUT);		\
-	fi;
-	@if	[ -e $(DIR_TARGETOUTPUT) ]; then 	\
-		$(RMDIR) $(DIR_TARGETOUTPUT);		\
-	fi;
-endif
+	$(RMDIR) $(DIR_OBJOUTPUT)
+	$(RMDIR) $(DIR_TARGETOUTPUT)
 
 -include $(SYS_OBJS_LIST:.o=.d)
 
