@@ -459,58 +459,45 @@ void BootMain( U32 CPUID )
     if (pSBI->SIGNATURE != HEADER_ID)
         printf( "2nd Boot Header is invalid, Please check it out!\r\n" );
 
-#if defined(CHIPID_LF3000)
-#ifdef usbload
-    printf( "Loading from usb...\r\n" );
-    Result = iUSBBOOT(pTBI);            // for USB boot
-#elif   defined spiload
-    printf( "Loading from spi...\r\n" );
-    Result = iSPIBOOT(pTBI);            // for SPI boot
-#elif   defined nandload
-    printf( "Loading from nand...\r\n" );
-    Result = iNANDBOOTEC(pTBI);         // for NAND boot
-#elif   defined sdmmcload
-    printf( "Loading from sdmmc...\r\n" );
-    Result = iSDXCBOOT(pTBI);           // for SD boot
-#elif   defined sdfsload
-    printf( "Loading from sd FATFS...\r\n" );
-    Result = iSDXCFSBOOT(pTBI);         // for SDFS boot
-#elif   defined uartload
-    printf( "Loading from uart...\r\n" );
-    Result = iUARTBOOT(pTBI);           // for UART boot
-#endif
-#elif defined(CHIPID_NXP4330)
-
     switch(pSBI->DBI.SPIBI.LoadDevice)
     {
+#ifdef usbload
     case BOOT_FROM_USB:
         printf( "Loading from usb...\r\n" );
         Result = iUSBBOOT(pTBI);        // for USB boot
         break;
+#endif
+#ifdef spiload
     case BOOT_FROM_SPI:
         printf( "Loading from spi...\r\n" );
         Result = iSPIBOOT(pTBI);        // for SPI boot
         break;
+#endif
+#ifdef nandload
     case BOOT_FROM_NAND:
         printf( "Loading from nand...\r\n" );
         Result = iNANDBOOTEC(pTBI);     // for NAND boot
         break;
+#endif
+#ifdef sdmmcload
     case BOOT_FROM_SDMMC:
         printf( "Loading from sdmmc...\r\n" );
         Result = iSDXCBOOT(pTBI);       // for SD boot
         break;
-    case BOOT_FROM_SDFS:
-        printf( "Loading from sd FATFS...\r\n" );
-        Result = iSDXCFSBOOT(pTBI);     // for SDFS boot
+#endif
+#ifdef sdfsload
+		printf( "Loading from sd FATFS...\r\n" );
+		Result = iSDXCFSBOOT(pTBI);     // for SDFS boot
         break;
-#if 0
+#endif
+#ifdef uartload
     case BOOT_FROM_UART:
-        printf( "Loading from uart...\r\n" );
-        Result = iUARTBOOT(pTBI);       // for UART boot
+
+		printf( "Loading from uart...\r\n" );
+		Result = iUARTBOOT(pTBI);       // for UART boot
         break;
 #endif
     }
-#endif
 
 
 #if 0   // for memory test

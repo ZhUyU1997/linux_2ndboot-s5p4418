@@ -8,41 +8,27 @@ VERINFO				= V05
 ###########################################################################
 DEBUG				= n
 
-#CHIPNAME			= LF3000
 CHIPNAME			= S5P4418
 
-ifeq ($(CHIPNAME),LF3000)
-BOOTFROM			= usb
+ifeq ($(CHIPNAME),S5P4418)
+#BOOTFROM			= usb
 #BOOTFROM			= spi
-#BOOTFROM			= sdmmc
+BOOTFROM			= sdmmc
 #BOOTFROM			= sdfs
 #BOOTFROM			= nand
 endif
 
-#BOARD				= _pyxis
-#BOARD				= _lynx
-#BOARD				= _vtk
-BOARD				= _drone
-#BOARD				= _svt
 
 # cross-tool pre-header
-ifeq ($(OS),Windows_NT)
-CROSS_TOOL_TOP		=
-CROSS_TOOL			= $(CROSS_TOOL_TOP)arm-none-eabi-
-else
 CROSS_TOOL_TOP		= 
-CROSS_TOOL			= $(CROSS_TOOL_TOP)arm-cortex_a9-linux-gnueabi-
-endif
+CROSS_TOOL			= $(CROSS_TOOL_TOP)arm-linux-gnueabihf-
 
 ###########################################################################
 # Top Names
 ###########################################################################
 PROJECT_NAME		= $(CHIPNAME)_2ndboot
-ifeq ($(CHIPNAME),LF3000)
 TARGET_NAME			= $(PROJECT_NAME)_$(VERINFO)$(BOARD)_$(BOOTFROM)
-else ifeq ($(CHIPNAME),NXP4330)
-TARGET_NAME			= $(PROJECT_NAME)_$(VERINFO)
-endif
+
 LDS_NAME			= pyrope_2ndboot
 
 
@@ -50,13 +36,9 @@ LDS_NAME			= pyrope_2ndboot
 # Directories
 ###########################################################################
 DIR_PROJECT_TOP		=
-
 DIR_OBJOUTPUT		= obj
-ifeq ($(CHIPNAME),LF3000)
 DIR_TARGETOUTPUT	= build$(BOARD)_$(BOOTFROM)
-else ifeq ($(CHIPNAME),NXP4330)
-DIR_TARGETOUTPUT	= build$(BOARD)
-endif
+
 
 CODE_MAIN_INCLUDE	=
 
@@ -108,10 +90,10 @@ ARFLAGS				= rcs
 ARFLAGS_REMOVE			= -d
 ARLIBFLAGS			= -v -s
 
-ASFLAG				= -D__ASSEMBLY__
+ASFLAG				= -D__ASSEMBLY__  -fdata-sections -mcpu=$(CPU) -marm
 
 CFLAGS				+=	-g -Wall				\
-					-Wextra -ffreestanding -fno-builtin	\
+					-Wextra -ffreestanding -fno-builtin	-fdata-sections -marm\
 					-msoft-float				\
 					-mlittle-endian				\
 					-mcpu=$(CPU)				\

@@ -1840,25 +1840,12 @@ void initDDR3(U32 isResume)
     WriteIO32( &pReg_Drex->TIMINGPZQ,   pSBI->DII.TIMINGPZQ );      //- average periodic ZQ interval. Max:0x4084
 #endif
 
-#if 1
-#if defined(ARCH_NXP4330) || defined(ARCH_S5P4418)
 #if (CFG_NSIH_EN == 0)
     WriteIO32( &pReg_DDRPHY->PHY_CON[4],    READDELAY);
     WriteIO32( &pReg_DDRPHY->PHY_CON[6],    WRITEDELAY);
 #else
     WriteIO32( &pReg_DDRPHY->PHY_CON[4],    pSBI->DII.READDELAY);
     WriteIO32( &pReg_DDRPHY->PHY_CON[6],    pSBI->DII.WRITEDELAY);
-#endif
-#endif
-#if defined(ARCH_NXP5430)
-#if (CFG_NSIH_EN == 0)
-    WriteIO32( &pReg_DDRPHY->OFFSETR_CON[0], READDELAY);
-    WriteIO32( &pReg_DDRPHY->OFFSETW_CON[0], WRITEDELAY);
-#else
-    WriteIO32( &pReg_DDRPHY->OFFSETR_CON[0], pSBI->DII.READDELAY);
-    WriteIO32( &pReg_DDRPHY->OFFSETW_CON[0], pSBI->DII.WRITEDELAY);
-#endif
-#endif
 #endif
 
 

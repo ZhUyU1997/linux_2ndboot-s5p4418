@@ -21,7 +21,7 @@ LDFLAGS		=	-Bstatic							\
 			-Wl,--start-group						\
 			-Lsrc/$(DIR_OBJOUTPUT)						\
 			-Wl,--end-group							\
-			-nostdlib
+			-nostdlib -Wl,-gc-sections -Wl,--build-id=none -L$(GCC_LIB) -lgcc
 
 SYS_OBJS	=	startup.o secondboot.o				\
 			resetcon.o CRYPTO.o GPIO.o CRC32.o		\
@@ -29,7 +29,7 @@ SYS_OBJS	=	startup.o secondboot.o				\
 SYS_OBJS	+=	MemoryInit.o
 #SYS_OBJS	+=	nx_tieoff.o
 
-ifeq ($(CHIPNAME),LF3000)
+ifeq ($(CHIPNAME),S5P4418)
 ifeq ($(BOOTFROM),usb)
 SYS_OBJS += iUSBBOOT.o
 endif
@@ -93,7 +93,6 @@ endif
 
 link:
 	@echo [link.... $(DIR_TARGETOUTPUT)/$(TARGET_NAME).elf]
-
 	$(Q)$(CC) $(SYS_OBJS_LIST) $(LDFLAGS) -o $(DIR_TARGETOUTPUT)/$(TARGET_NAME).elf
 
 bin:
